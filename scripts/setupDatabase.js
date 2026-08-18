@@ -13,10 +13,10 @@ async function setup() {
         );
         
         `);
-        await mysqlPool.query(
-            "UPDATE users SET role = 'admin' WHERE email = ?", 
-            ['mohamed@gmail.com']
-        );
+        // await mysqlPool.query(
+        //     "UPDATE users SET role = 'admin' WHERE email = ?", 
+        //     ['mohamed@gmail.com']
+        // );
         console.log("users table created successfully (or already existed)");
     } catch (err) {
         console.error("An error occurred:", err.message);
