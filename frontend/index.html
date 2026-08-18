@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            text-align: center;
+            background: #1e1e1e;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            max-width: 400px;
+            width: 90%;
+        }
+        h1 {
+            margin-bottom: 30px;
+            font-size: 2.2rem;
+            color: #0070f3;
+        }
+        .buttons-container {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+        .btn {
+            flex: 1;
+            padding: 12px 20px;
+            font-size: 1rem;
+            font-weight: bold;
+            color: #fff;
+            background-color: #0070f3;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background 0.3s;
+        }
+        .btn:hover {
+            background-color: #0051a2;
+        }
+        .btn-secondary {
+            background-color: #333;
+        }
+        .btn-secondary:hover {
+            background-color: #555;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Welcome</h1>
+        <div class="buttons-container">
+            <a href="/login.html" class="btn">Login</a>
+            <a href="/register.html" class="btn btn-secondary">Register</a>
+        </div>
+    </div>
+
+</body>
+</html>

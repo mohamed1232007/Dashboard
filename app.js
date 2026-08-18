@@ -27,5 +27,7 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/api/users", authRoutes);  
 app.use("/", customerRoutes);       
-
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "frontend", "index.html"));
+});
 module.exports = app;
