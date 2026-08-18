@@ -1,33 +1,36 @@
 const express = require("express");
-const cors = require("cors");
 const path = require("path");
-const methodOverride = require("method-override");
 const cookieParser = require("cookie-parser");
-
+const methodOverride = require("method-override");
 const { connectMongo } = require("./config/db");
+
 const authRoutes = require("./routes/authRoutes");
 const customerRoutes = require("./routes/customerRoutes");
 
 const app = express();
 
-connectMongo();
-
-app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(methodOverride("_method"));
-app.use(cookieParser());
-
-
+// Set View Engine
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
-app.use(express.static(path.join(__dirname, "frontend")));  
-app.use(express.static(path.join(__dirname, "public")));    
+// Middlewares
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(cookieParser());
+app.use(methodOverride("_method"));
 
-app.use("/api/users", authRoutes);  
-app.use("/", customerRoutes);       
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "frontend", "index.html"));
+// Serve static files
+app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(path.join(__dirname, "frontend")));
+
+// Middleware لضمان الاتصال بالمونجو في كل طلب على Vercel
+app.use(async (req, res, next) => {
+    await connectMongo();
+    next();
 });
+
+// Routes
+app.use("/api/users", authRoutes);
+app.use("/", customerRoutes);
+
 module.exports = app;
