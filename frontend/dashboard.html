@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #121212;
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        button {
+            padding: 0.8rem 1.5rem;
+            background-color: #ff4b4b;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #e03e3e;
+        }
+    </style>
+</head>
+<body>
+
+    <h1 id="welcomeMessage">Loading...</h1>
+    <button id="logoutBtn">Logout</button>
+
+    <script>
+        async function initDashboard() {
+            try {
+                const res = await fetch('/api/users/me');
+                if (!res.ok) {
+                    window.location.href = 'login.html';
+                    return;
+                }
+                const data = await res.json();
+
+                if (data.user.role === 'admin') {
+                    window.location.href = '/customers';
+                    return;
+                }
+
+                document.getElementById('welcomeMessage').textContent = `Welcome, ${data.user.name}`;
+            } catch (err) {
+                window.location.href = 'login.html';
+            }
+        }
+        initDashboard();
+
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            await fetch('/api/users/logout', { method: 'POST' });
+            window.location.href = 'login.html';
+        });
+    </script>
+</body>
+</html>
