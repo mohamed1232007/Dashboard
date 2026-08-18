@@ -19,7 +19,6 @@ function showToast(message, type = 'success') {
         toast.classList.remove('show');
     }, 3000);
 }
-
 loginForm.addEventListener('submit', async (e) => {
     e.preventDefault();
 
@@ -33,23 +32,40 @@ loginForm.addEventListener('submit', async (e) => {
             body: JSON.stringify({ email, password }),
         });
 
-        const data = await response.json();
+        // 🟢 سطور زيادة للـ Console عشان تعرف الرد جاي إزاي بالضبط
+        console.log('Response Status:', response.status); // هيطبع لك 200 أو 404 أو 500
+        console.log('Response OK:', response.ok);       // true أو false
 
-        if (response.ok) {
-            showToast(`Welcome, ${data.user.name}`, 'success');
+        const contentType = response.headers.get('content-type');
+        console.log('Content-Type:', contentType);      // هيطبع هل الرد application/json ولا text/html
 
-            setTimeout(() => {
-                if (data.user.role === 'admin') {
-                    window.location.href = '/customers';
-                } else {
-                    window.location.href = 'dashboard.html';
-                }
-            }, 800);
+        if (contentType && contentType.includes('application/json')) {
+            const data = await response.json();
+            console.log('Response Data:', data);        // هيطبع الـ JSON اللي راجع من السيرفر
+
+            if (response.ok) {
+                showToast(`Welcome, ${data.user.name}`, 'success');
+                setTimeout(() => {
+                    if (data.user.role === 'admin') {
+                        window.location.href = '/customers';
+                    } else {
+                        window.location.href = 'dashboard.html';
+                    }
+                }, 800);
+            } else {
+                showToast(data.message || 'Login failed', 'error');
+            }
         } else {
-            showToast(data.message || 'Login failed', 'error');
+            // 🔴 لو الرد مش JSON (يعني السيرفر بره رجع HTML 404/500)
+            const textResponse = await response.text();
+            console.error('Server returned HTML instead of JSON:', textResponse); // هيطبع نص صفحة الإيرور كاملة في الكونسول
+            showToast(`Server returned status: ${response.status}`, 'error');
         }
+
     } catch (error) {
-        console.error('Error:', error);
+        // 🔴 حط تفاصيل الإيرور بالكامل هنا
+        console.error('Fetch Error details:', error.name, error.message);
+        console.error('Full Error Object:', error);
         showToast('A server error occurred.', 'error');
     }
 });
